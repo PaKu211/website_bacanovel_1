@@ -74,6 +74,8 @@
           card.appendChild(titleEl);
           card.appendChild(snippetEl);
           hits.appendChild(card);
+        }).catch(function (err) {
+          console.warn('Failed to load search result content:', err.message);
         });
       });
       results.classList.remove('hidden');
@@ -91,7 +93,11 @@
         debounceTimer = setTimeout(function () {
           loadPagefind().then(function () {
             if (pagefind) {
-              pagefind.search(q).then(renderHits);
+              pagefind.search(q).then(renderHits).catch(function (err) {
+                console.warn('Search failed:', err.message);
+                status.textContent = 'Pencarian gagal, silakan coba lagi.';
+                results.classList.remove('hidden');
+              });
             }
           });
         }, 200);

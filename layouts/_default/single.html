@@ -46,7 +46,7 @@
     const fontIncrease = document.getElementById('font-increase');
     const fontSteps = [90, 100, 110, 120, 130, 140];
     const fontKey = 'reading-font-scale';
-    let currentScale = Number(localStorage.getItem(fontKey) || 100);
+    let currentScale = Number(localStorage.getItem(fontKey)) || 100;
 
     function applyFontScale(scale) {
       const clamped = Math.min(140, Math.max(90, scale));
