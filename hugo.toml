@@ -5,6 +5,7 @@ buildFuture = true
 
 [params]
   description = "Baca novel online gratis. Koleksi novel terbaru, bab baru setiap hari."
+  cfAnalyticsToken = ""
 
   [params.giscus]
     repo = "owner/bacanovel-site"
@@ -19,4 +20,4 @@ buildFuture = true
 [markup]
   [markup.goldmark]
     [markup.goldmark.renderer]
-      unsafe = true
+      unsafe = false

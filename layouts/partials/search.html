@@ -46,6 +46,12 @@
       }
     }
 
+    function escapeHTML(str) {
+      var div = document.createElement('div');
+      div.appendChild(document.createTextNode(str));
+      return div.innerHTML;
+    }
+
     function renderHits(data) {
       hits.innerHTML = '';
       if (!data.results || data.results.length === 0) {
@@ -59,8 +65,14 @@
           var card = document.createElement('a');
           card.href = result.url;
           card.className = 'block rounded-xl border border-slate-100 bg-slate-50 p-3 transition hover:border-sky-300 hover:bg-sky-50 dark:border-slate-700 dark:bg-slate-800 dark:hover:border-sky-600';
-          card.innerHTML = '<p class="text-sm font-medium text-slate-900 dark:text-white">' + result.meta.title + '</p>' +
-            '<p class="mt-1 line-clamp-2 text-xs text-slate-500 dark:text-slate-400">' + content.substring(0, 120) + '…</p>';
+          var titleEl = document.createElement('p');
+          titleEl.className = 'text-sm font-medium text-slate-900 dark:text-white';
+          titleEl.textContent = result.meta.title || '';
+          var snippetEl = document.createElement('p');
+          snippetEl.className = 'mt-1 line-clamp-2 text-xs text-slate-500 dark:text-slate-400';
+          snippetEl.textContent = (content || '').substring(0, 120) + '\u2026';
+          card.appendChild(titleEl);
+          card.appendChild(snippetEl);
           hits.appendChild(card);
         });
       });
