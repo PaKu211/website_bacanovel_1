@@ -39,6 +39,15 @@ def slugify(text):
     return text.strip("-")
 
 
+def escape_yaml_string(text):
+    """Escape a string for safe inclusion in double-quoted YAML values."""
+    text = text.replace("\\", "\\\\")
+    text = text.replace('"', '\\"')
+    text = text.replace("\n", "\\n")
+    text = text.replace("\r", "")
+    return text
+
+
 def sanitize_body(text):
     """Strip residual HTML tags and normalize whitespace to clean markdown."""
     if not text:
@@ -95,6 +104,15 @@ def ensure_dir(path):
     os.makedirs(path, exist_ok=True)
 
 
+def safe_path(base, target):
+    """Ensure target is within base directory (prevent path traversal)."""
+    real_base = os.path.realpath(base)
+    real_target = os.path.realpath(target)
+    if not real_target.startswith(real_base + os.sep) and real_target != real_base:
+        raise ValueError(f"Path traversal detected: {target} escapes {base}")
+    return real_target
+
+
 # ---------------------------------------------------------------------------
 # Chapter file writer (shared by batch and single import)
 # ---------------------------------------------------------------------------
@@ -103,10 +121,10 @@ def write_chapter_file(file_path, title, chapter_num, novel_slug, novel_title, b
     """Write a single chapter Markdown file with full front matter."""
     with open(file_path, "w", encoding="utf-8") as f:
         f.write("---\n")
-        f.write(f'title: "{title}"\n')
+        f.write(f'title: "{escape_yaml_string(title)}"\n')
         f.write(f'slug: "chapter-{chapter_num:04d}"\n')
-        f.write(f'novel_slug: "{novel_slug}"\n')
-        f.write(f'novel_title: "{novel_title}"\n')
+        f.write(f'novel_slug: "{escape_yaml_string(novel_slug)}"\n')
+        f.write(f'novel_title: "{escape_yaml_string(novel_title)}"\n')
         f.write(f"chapter_number: {chapter_num}\n")
         f.write(f"weight: {chapter_num}\n")
         f.write(f"date: {now_iso()}\n")
@@ -139,19 +157,19 @@ def write_novel_index(novel_dir, meta_data, novel_title, novel_slug, chapter_cou
 
     with open(index_path, "w", encoding="utf-8") as f:
         f.write("---\n")
-        f.write(f'title: "{novel_title}"\n')
-        f.write(f'slug: "{novel_slug}"\n')
+        f.write(f'title: "{escape_yaml_string(novel_title)}"\n')
+        f.write(f'slug: "{escape_yaml_string(novel_slug)}"\n')
         f.write('type: "novel"\n')
         if author:
-            f.write(f'author: "{author}"\n')
-        f.write(f'status: "{status}"\n')
+            f.write(f'author: "{escape_yaml_string(author)}"\n')
+        f.write(f'status: "{escape_yaml_string(status)}"\n')
         if genres:
             f.write("genres:\n")
             for g in genres:
-                f.write(f"  - {g}\n")
+                f.write(f"  - {escape_yaml_string(g)}\n")
         f.write(f'cover: "{cover_rel}"\n')
         if summary:
-            f.write(f'summary: "{summary}"\n')
+            f.write(f'summary: "{escape_yaml_string(summary)}"\n')
         f.write(f'date: {now_iso()}\n')
         f.write("draft: false\n")
         f.write("---\n")
@@ -177,9 +195,11 @@ def copy_cover(target_folder, novel_slug):
         else:
             return False
 
-    dest_dir = os.path.join(find_hugo_root(), "static", "images", "covers")
+    static_base = os.path.join(find_hugo_root(), "static")
+    dest_dir = os.path.join(static_base, "images", "covers")
     ensure_dir(dest_dir)
     dest = os.path.join(dest_dir, f"{novel_slug}.jpg")
+    safe_path(static_base, dest)
     shutil.copy2(cover_src, dest)
     print(f"  -> cover copied: static/images/covers/{novel_slug}.jpg")
     return True
@@ -221,7 +241,9 @@ def import_split_novel(target_folder, rate=0.1, force=False):
     novel_slug = slugify(novel_title)
 
     hugo_root = find_hugo_root()
-    novel_dir = os.path.join(hugo_root, "content", "novels", novel_slug)
+    content_base = os.path.join(hugo_root, "content")
+    novel_dir = os.path.join(content_base, "novels", novel_slug)
+    safe_path(content_base, novel_dir)
     ensure_dir(novel_dir)
 
     # 1. Write novel _index.md
@@ -261,7 +283,7 @@ def import_split_novel(target_folder, rate=0.1, force=False):
             ch_data = json.load(f)
 
         ch_title = ch_data.get("title", f"Bab {idx}").strip()
-        ch_body = ch_data.get("body", ch_data.get("content", ""))
+        ch_body = sanitize_body(ch_data.get("body", ch_data.get("content", "")))
 
         ch_filename = chapter_filename(idx)
         ch_file_path = os.path.join(novel_dir, ch_filename)
@@ -294,7 +316,9 @@ def import_single_chapter(args):
         return False
 
     novel_slug = slugify(args.novel_slug)
-    novel_dir = os.path.join(hugo_root, "content", "novels", novel_slug)
+    content_base = os.path.join(hugo_root, "content")
+    novel_dir = os.path.join(content_base, "novels", novel_slug)
+    safe_path(content_base, novel_dir)
     ensure_dir(novel_dir)
 
     # Read content
