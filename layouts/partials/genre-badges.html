@@ -1,0 +1,12 @@
+{{/*
+  Partial: genre-badges.html
+  Renders a list of genre badges.
+  Usage: partial "genre-badges.html" (dict "genres" .Params.genres)
+*/}}
+{{ with .genres }}
+  <div class="flex flex-wrap gap-1.5">
+    {{ range . }}
+      <span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">{{ . }}</span>
+    {{ end }}
+  </div>
+{{ end }}

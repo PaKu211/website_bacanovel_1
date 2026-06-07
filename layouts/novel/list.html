@@ -12,13 +12,7 @@
   ) }}
 
   <section class="novel-card mb-10 grid gap-6 p-6 sm:grid-cols-[180px_1fr] sm:p-8">
-    <div class="overflow-hidden rounded-2xl bg-slate-200 dark:bg-slate-800">
-      {{ with .Params.cover }}
-        <img src="{{ . | relURL }}" alt="Sampul {{ $.Title }}" class="aspect-[3/4] w-full object-cover" loading="lazy" decoding="async">
-      {{ else }}
-        <div class="aspect-[3/4] w-full bg-slate-200 dark:bg-slate-800"></div>
-      {{ end }}
-    </div>
+    {{ partial "cover-image.html" (dict "cover" .Params.cover "title" .Title) }}
     <div class="flex flex-col gap-4">
       <dl class="grid gap-2 text-sm sm:grid-cols-[120px_1fr]">
         {{ with .Params.author }}
@@ -32,10 +26,8 @@
         {{ with .Params.genres }}
           {{ if gt (len .) 0 }}
         <dt class="text-slate-500 dark:text-slate-400">Genre</dt>
-        <dd class="flex flex-wrap gap-1.5">
-            {{ range . }}
-          <span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-200">{{ . }}</span>
-            {{ end }}
+        <dd>
+          {{ partial "genre-badges.html" (dict "genres" .) }}
         </dd>
           {{ end }}
         {{ end }}
@@ -65,18 +57,9 @@
     <h2 class="mb-4 text-xl font-semibold tracking-tight text-slate-900 dark:text-white">Daftar Bab ({{ len $chapters }})</h2>
     <div class="grid gap-3">
       {{ range $chapters }}
-        <article class="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4 transition hover:border-slate-300 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-slate-700 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p class="text-xs uppercase tracking-[0.25em] text-slate-400 dark:text-slate-500">Bab {{ .Params.chapter_number }}</p>
-            <h3 class="mt-1 text-base font-semibold text-slate-900 dark:text-white">{{ .Title }}</h3>
-            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ .Date.Format "02 Jan 2006" }}</p>
-          </div>
-          <a class="control-btn self-start sm:self-center" href="{{ .RelPermalink }}">Baca</a>
-        </article>
+        {{ partial "chapter-list-item.html" . }}
       {{ else }}
-        <p class="rounded-2xl border border-dashed border-slate-300 p-6 text-center text-slate-500 dark:border-slate-700 dark:text-slate-400">
-          Belum ada bab yang dipublikasikan.
-        </p>
+        {{ partial "empty-state.html" (dict "message" "Belum ada bab yang dipublikasikan.") }}
       {{ end }}
     </div>
   </section>

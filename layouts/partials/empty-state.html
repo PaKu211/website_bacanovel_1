@@ -1,0 +1,11 @@
+{{/*
+  Partial: empty-state.html
+  Renders an empty-state placeholder with a configurable message.
+  Usage: partial "empty-state.html" (dict "message" "Belum ada novel yang dipublikasikan.")
+  Optional: "class" for extra CSS classes on the wrapper.
+*/}}
+{{ $message := .message | default "Belum ada konten." }}
+{{ $extraClass := .class | default "" }}
+<div class="rounded-3xl border border-dashed border-slate-300 bg-white p-10 text-center text-slate-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 {{ $extraClass }}">
+  {{ $message }}
+</div>
