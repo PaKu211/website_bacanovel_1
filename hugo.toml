@@ -13,7 +13,7 @@ buildFuture = true
     categoryId = "REPLACE_ME"
 
 [outputs]
-  home = ["HTML", "JSON"]
+  home = ["HTML"]
   page = ["HTML"]
   section = ["HTML"]
 [markup]
