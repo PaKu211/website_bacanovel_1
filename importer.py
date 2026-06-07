@@ -96,6 +96,26 @@ def ensure_dir(path):
 
 
 # ---------------------------------------------------------------------------
+# Chapter file writer (shared by batch and single import)
+# ---------------------------------------------------------------------------
+
+def write_chapter_file(file_path, title, chapter_num, novel_slug, novel_title, body):
+    """Write a single chapter Markdown file with full front matter."""
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.write("---\n")
+        f.write(f'title: "{title}"\n')
+        f.write(f'slug: "chapter-{chapter_num:04d}"\n')
+        f.write(f'novel_slug: "{novel_slug}"\n')
+        f.write(f'novel_title: "{novel_title}"\n')
+        f.write(f"chapter_number: {chapter_num}\n")
+        f.write(f"weight: {chapter_num}\n")
+        f.write(f"date: {now_iso()}\n")
+        f.write("draft: false\n")
+        f.write("---\n")
+        f.write(f"\n{body}\n")
+
+
+# ---------------------------------------------------------------------------
 # Novel index (_index.md)
 # ---------------------------------------------------------------------------
 
@@ -251,18 +271,7 @@ def import_split_novel(target_folder, rate=0.1, force=False):
             skipped += 1
             continue
 
-        with open(ch_file_path, "w", encoding="utf-8") as f:
-            f.write("---\n")
-            f.write(f'title: "{ch_title}"\n')
-            f.write(f'slug: "chapter-{idx:04d}"\n')
-            f.write(f'novel_slug: "{novel_slug}"\n')
-            f.write(f'novel_title: "{novel_title}"\n')
-            f.write(f"chapter_number: {idx}\n")
-            f.write(f"weight: {idx}\n")
-            f.write(f"date: {now_iso()}\n")
-            f.write("draft: false\n")
-            f.write("---\n")
-            f.write(f"\n{ch_body}\n")
+        write_chapter_file(ch_file_path, ch_title, idx, novel_slug, novel_title, ch_body)
 
         written += 1
         if rate > 0:
@@ -315,18 +324,7 @@ def import_single_chapter(args):
         print(f"Error: {ch_filename} sudah ada. Gunakan --force untuk menimpa.")
         return False
 
-    with open(ch_file_path, "w", encoding="utf-8") as f:
-        f.write("---\n")
-        f.write(f'title: "{title}"\n')
-        f.write(f'slug: "chapter-{chapter_num:04d}"\n')
-        f.write(f'novel_slug: "{novel_slug}"\n')
-        f.write(f'novel_title: "{args.novel_slug}"\n')
-        f.write(f"chapter_number: {chapter_num}\n")
-        f.write(f"weight: {chapter_num}\n")
-        f.write(f"date: {now_iso()}\n")
-        f.write("draft: false\n")
-        f.write("---\n")
-        f.write(f"\n{content}\n")
+    write_chapter_file(ch_file_path, title, chapter_num, novel_slug, args.novel_slug, content)
 
     print(f"Berhasil: {novel_dir}/{ch_filename}")
     return True

@@ -1,0 +1,16 @@
+{{/*
+  Partial: cover-image.html
+  Renders a cover image with a fallback placeholder.
+  Usage: partial "cover-image.html" (dict "cover" .Params.cover "title" .Title)
+  Optional: "class" for extra CSS classes on the wrapper.
+*/}}
+{{ $cover := .cover }}
+{{ $title := .title | default "" }}
+{{ $class := .class | default "" }}
+<div class="overflow-hidden rounded-2xl bg-slate-200 dark:bg-slate-800 {{ $class }}">
+  {{ with $cover }}
+    <img src="{{ . | relURL }}" alt="Sampul {{ $title }}" class="aspect-[3/4] w-full object-cover" loading="lazy" decoding="async">
+  {{ else }}
+    <div class="aspect-[3/4] w-full bg-slate-200 dark:bg-slate-800"></div>
+  {{ end }}
+</div>
