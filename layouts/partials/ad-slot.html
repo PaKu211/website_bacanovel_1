@@ -5,15 +5,15 @@
     {{ $raw | safeHTML }}
   {{ else }}
     <div>
-      <p class="text-xs uppercase tracking-[0.25em] text-slate-400 dark:text-slate-500">Sponsor</p>
+      <p class="text-[11px] font-medium text-stone-400 dark:text-stone-500">Sponsor</p>
       {{ if eq $slot "top" }}
-        <p class="mt-2">[Banner Iklan - Top]</p>
+        <p class="mt-1.5 text-stone-500 dark:text-stone-400">Banner iklan, posisi atas.</p>
       {{ else if eq $slot "middle" }}
-        <p class="mt-2">[Banner Iklan - Middle]</p>
+        <p class="mt-1.5 text-stone-500 dark:text-stone-400">Banner iklan, posisi tengah.</p>
       {{ else if eq $slot "bottom" }}
-        <p class="mt-2">[Banner Iklan - Bottom]</p>
+        <p class="mt-1.5 text-stone-500 dark:text-stone-400">Banner iklan, posisi bawah.</p>
       {{ else }}
-        <p class="mt-2">[Area Iklan Banner]</p>
+        <p class="mt-1.5 text-stone-500 dark:text-stone-400">Area banner iklan.</p>
       {{ end }}
     </div>
   {{ end }}

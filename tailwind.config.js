@@ -9,14 +9,15 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        serif: ['Georgia', 'Cambria', 'serif'],
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        serif: ['ui-serif', 'Georgia', 'Cambria', '"Times New Roman"', '"Noto Serif"', 'serif'],
+        sans: ['ui-sans-serif', 'system-ui', '-apple-system', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', '"Noto Sans"', 'sans-serif'],
+        mono: ['ui-monospace', 'SFMono-Regular', '"JetBrains Mono"', 'Menlo', 'Consolas', 'monospace'],
       },
       maxWidth: {
-        reading: '65ch',
+        reading: '68ch',
       },
       boxShadow: {
-        soft: '0 10px 30px rgba(15, 23, 42, 0.08)',
+        soft: '0 1px 0 rgba(28, 25, 23, 0.04), 0 8px 24px -12px rgba(28, 25, 23, 0.08)',
       },
     },
   },

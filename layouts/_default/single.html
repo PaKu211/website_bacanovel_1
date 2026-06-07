@@ -1,17 +1,28 @@
 {{ define "title" }}{{ .Title }} - {{ .Params.novel_title }}{{ end }}
 
 {{ define "main" }}
+  <a id="top"></a>
   {{ partial "site-header.html" (dict
     "Context" .
     "Eyebrow" .Params.novel_title
     "Title" .Title
     "Description" (printf "Dipublikasikan pada %s" (.Date.Format "02 Jan 2006"))
     "ShowBack" true
-    "BackURL" "/"
-    "BackLabel" "Beranda"
+    "BackURL" .CurrentSection.RelPermalink
+    "BackLabel" "Kembali ke daftar bab"
   ) }}
 
   <section class="reading-card p-6 sm:p-8">
+    <div class="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-stone-200 pb-5 dark:border-stone-800">
+      <p class="text-xs font-medium text-stone-500 dark:text-stone-400">Chapter {{ .Params.chapter_number }}</p>
+      <div class="flex items-center gap-2 text-xs text-stone-500 dark:text-stone-400">
+        <span>Ukuran teks</span>
+        <button type="button" id="font-decrease" class="control-btn h-8 px-3 text-xs" aria-label="Perkecil teks">A-</button>
+        <span id="font-display" class="min-w-[3.5rem] text-center text-xs font-medium text-stone-700 dark:text-stone-200">100%</span>
+        <button type="button" id="font-increase" class="control-btn h-8 px-3 text-xs" aria-label="Perbesar teks">A+</button>
+      </div>
+    </div>
+
     {{ partial "ad-slot.html" (dict "slot" "top") }}
 
     <article id="reading-area" class="reading-content">
@@ -24,8 +35,9 @@
 
     {{ partial "ad-slot.html" (dict "slot" "bottom") }}
 
-    <section class="mt-10 rounded-3xl border border-slate-200 bg-slate-50 p-6 dark:border-slate-800 dark:bg-slate-950">
-      <h2 class="text-xl font-semibold tracking-tight text-slate-900 dark:text-white">Komentar Pembaca</h2>
+    <section class="mt-12 rounded-2xl border border-stone-200/80 bg-stone-50 p-6 dark:border-stone-800/80 dark:bg-stone-900/60">
+      <h2 class="text-xl font-semibold tracking-tight text-stone-900 dark:text-stone-50">Komentar Pembaca</h2>
+      <p class="mt-1 text-sm text-stone-500 dark:text-stone-400">Diskusi pembaca tentang bab ini.</p>
       {{ partial "giscus.html" (dict
         "repo" .Site.Params.giscus.repo
         "repoId" .Site.Params.giscus.repoId
@@ -76,7 +88,6 @@
       });
     }
 
-    /* Reading progress */
     (function () {
       var path = window.location.pathname;
       var progressKey = 'reading-progress:' + path;

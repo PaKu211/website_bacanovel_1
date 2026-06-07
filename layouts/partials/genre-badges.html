@@ -6,7 +6,7 @@
 {{ with .genres }}
   <div class="flex flex-wrap gap-1.5">
     {{ range . }}
-      <span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">{{ . }}</span>
+      <span class="rounded-full border border-stone-200 bg-stone-100/60 px-2.5 py-0.5 text-xs font-medium text-stone-600 dark:border-stone-700 dark:bg-stone-800/60 dark:text-stone-300">{{ . }}</span>
     {{ end }}
   </div>
 {{ end }}

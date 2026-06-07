@@ -57,13 +57,16 @@ def sanitize_body(text):
     text = re.sub(r"<p[^>]*>", "\n", text, flags=re.IGNORECASE)
     text = re.sub(r"</p>", "\n", text, flags=re.IGNORECASE)
     text = re.sub(r"<[^>]+>", "", text)
-    # Decode common HTML entities
+    # Decode common HTML entities (em/en dash entities are dropped, not converted)
     text = text.replace("&ldquo;", "\u201c").replace("&rdquo;", "\u201d")
     text = text.replace("&lsquo;", "\u2018").replace("&rsquo;", "\u2019")
-    text = text.replace("&mdash;", "\u2014").replace("&ndash;", "\u2013")
+    text = re.sub(r"&(mdash|ndash|#x2014|#8211|#8212|#x2013);?", "", text, flags=re.IGNORECASE)
     text = text.replace("&nbsp;", " ").replace("&amp;", "&")
     text = text.replace("&lt;", "<").replace("&gt;", ">")
     text = text.replace("&quot;", '"')
+    # Strip em-dashes and en-dashes (frontend design rule: no em/en dashes)
+    text = text.replace("\u2014", ", ").replace("\u2013", "-")
+    text = re.sub(r",\s*,+", ", ", text)
     # Collapse whitespace: multiple newlines → double, tabs → spaces
     text = re.sub(r"[^\S\n]+", " ", text)
     text = re.sub(r"\n{3,}", "\n\n", text)

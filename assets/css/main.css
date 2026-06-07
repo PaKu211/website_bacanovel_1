@@ -1,66 +1,103 @@
 @import "tailwindcss";
 @config "../../tailwind.config.js";
 
+@theme {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", "Noto Serif", serif;
+  --font-mono: ui-monospace, SFMono-Regular, "JetBrains Mono", Menlo, Consolas, monospace;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
+    text-size-adjust: 100%;
   }
 
   body {
-    @apply bg-slate-50 text-slate-800 antialiased transition-colors duration-200 dark:bg-slate-950 dark:text-slate-100;
+    @apply bg-stone-100 text-stone-800 antialiased transition-colors duration-200 dark:bg-stone-950 dark:text-stone-100;
+    font-feature-settings: "ss01", "kern", "liga", "calt";
+  }
+
+  ::selection {
+    @apply bg-stone-900/15 text-stone-900 dark:bg-stone-100/20 dark:text-stone-50;
   }
 
   a {
     @apply transition-colors duration-150;
   }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight text-stone-900 dark:text-stone-50;
+    text-wrap: balance;
+  }
 }
 
 @layer components {
   .reading-shell {
-    @apply mx-auto w-full max-w-reading px-4 py-8 sm:px-6 lg:px-8;
+    @apply mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8;
   }
 
   .reading-card {
-    @apply rounded-3xl border border-slate-200 bg-white/90 shadow-soft backdrop-blur dark:border-slate-800 dark:bg-slate-900/90;
+    @apply rounded-2xl border border-stone-200/80 bg-stone-50 shadow-[0_1px_0_rgba(28,25,23,0.04),0_8px_24px_-12px_rgba(28,25,23,0.08)] dark:border-stone-800/80 dark:bg-stone-900;
+  }
+
+  .surface-soft {
+    @apply rounded-2xl border border-stone-200/80 bg-stone-50/60 dark:border-stone-800/80 dark:bg-stone-900/60;
   }
 
   .novel-card {
-    @apply overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-soft transition-transform duration-200 hover:-translate-y-1 dark:border-slate-800 dark:bg-slate-900;
+    @apply overflow-hidden rounded-2xl border border-stone-200/80 bg-stone-50 transition duration-200 hover:-translate-y-0.5 hover:border-stone-300 hover:shadow-[0_1px_0_rgba(28,25,23,0.04),0_12px_28px_-16px_rgba(28,25,23,0.12)] dark:border-stone-800/80 dark:bg-stone-900 dark:hover:border-stone-700;
   }
 
   .ad-slot {
-    @apply my-6 flex min-h-[90px] w-full items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 text-center text-sm font-medium text-slate-500 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-400;
+    @apply my-8 flex min-h-[88px] w-full items-center justify-center rounded-2xl border border-dashed border-stone-300 bg-stone-50/60 px-4 text-center text-sm text-stone-500 dark:border-stone-700 dark:bg-stone-900/60 dark:text-stone-400;
   }
 
   .control-btn {
-    @apply inline-flex h-11 items-center justify-center rounded-full border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800;
+    @apply inline-flex h-10 items-center justify-center rounded-full border border-stone-300 bg-stone-50 px-4 text-sm font-medium text-stone-700 transition duration-150 hover:border-stone-400 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-200 dark:hover:border-stone-600 dark:hover:bg-stone-800;
   }
 
   .control-btn-active {
-    @apply border-sky-500 bg-sky-500 text-white hover:border-sky-500 hover:bg-sky-500 dark:border-sky-400 dark:bg-sky-400 dark:text-slate-950;
+    @apply border-stone-900 bg-stone-900 text-stone-50 hover:border-stone-900 hover:bg-stone-800 dark:border-stone-100 dark:bg-stone-100 dark:text-stone-900 dark:hover:border-stone-100 dark:hover:bg-stone-200;
   }
 
   .reading-content {
-    @apply mx-auto max-w-reading text-[1.05rem] leading-8 text-slate-700 dark:text-slate-200;
+    @apply font-serif text-stone-800 dark:text-stone-200;
+    font-size: 1.125rem;
+    line-height: 1.75;
+    max-width: 68ch;
+    margin-left: auto;
+    margin-right: auto;
+    text-rendering: optimizeLegibility;
   }
 
   .reading-content p {
-    @apply mb-6 text-justify;
+    @apply mb-6 text-justify hyphens-auto;
   }
 
   .reading-content h1,
   .reading-content h2,
   .reading-content h3,
   .reading-content h4 {
-    @apply mt-10 mb-4 font-semibold tracking-tight text-slate-900 dark:text-white;
+    @apply mt-12 mb-4 font-semibold tracking-tight text-stone-900 dark:text-stone-50;
+    font-family: var(--font-sans);
+  }
+
+  .reading-content h2 {
+    @apply text-2xl;
+  }
+
+  .reading-content h3 {
+    @apply text-xl;
   }
 
   .reading-content img {
-    @apply my-8 rounded-2xl;
+    @apply my-10 rounded-xl;
   }
 
   .reading-content blockquote {
-    @apply my-8 border-l-4 border-sky-500 bg-sky-50 px-5 py-4 italic text-slate-700 dark:border-sky-400 dark:bg-slate-900 dark:text-slate-200;
+    @apply my-8 border-l-2 border-stone-400 bg-stone-50 px-5 py-4 italic text-stone-700 dark:border-stone-500 dark:bg-stone-900/70 dark:text-stone-200;
+    font-style: italic;
   }
 
   .reading-content ul,
@@ -68,7 +105,19 @@
     @apply my-6 pl-6;
   }
 
+  .reading-content ul {
+    @apply list-disc;
+  }
+
+  .reading-content ol {
+    @apply list-decimal;
+  }
+
   .reading-content li {
     @apply mb-2;
+  }
+
+  .reading-content a {
+    @apply text-stone-900 underline decoration-stone-400 underline-offset-4 transition hover:decoration-stone-700 dark:text-stone-100 dark:decoration-stone-500 dark:hover:decoration-stone-300;
   }
 }

@@ -3,7 +3,7 @@
 {{ define "main" }}
   {{ partial "site-header.html" (dict
     "Context" .
-    "Eyebrow" (printf "Novel • %s" (.Params.status | default "ongoing" | title))
+    "Eyebrow" (printf "Novel · %s" (.Params.status | default "ongoing" | title))
     "Title" .Title
     "Description" .Params.summary
     "ShowBack" true
@@ -11,21 +11,21 @@
     "BackLabel" "Beranda"
   ) }}
 
-  <section class="novel-card mb-10 grid gap-6 p-6 sm:grid-cols-[180px_1fr] sm:p-8">
+  <section class="reading-card mb-10 grid gap-6 p-6 sm:grid-cols-[180px_1fr] sm:gap-8 sm:p-8">
     {{ partial "cover-image.html" (dict "cover" .Params.cover "title" .Title) }}
-    <div class="flex flex-col gap-4">
-      <dl class="grid gap-2 text-sm sm:grid-cols-[120px_1fr]">
+    <div class="flex flex-col gap-5">
+      <dl class="grid gap-x-6 gap-y-3 text-sm sm:grid-cols-[120px_1fr]">
         {{ with .Params.author }}
-        <dt class="text-slate-500 dark:text-slate-400">Penulis</dt>
-        <dd class="font-medium text-slate-900 dark:text-white">{{ . }}</dd>
+        <dt class="text-stone-500 dark:text-stone-400">Penulis</dt>
+        <dd class="font-medium text-stone-900 dark:text-stone-50">{{ . }}</dd>
         {{ end }}
         {{ with .Params.status }}
-        <dt class="text-slate-500 dark:text-slate-400">Status</dt>
-        <dd class="font-medium text-slate-900 dark:text-white">{{ . | title }}</dd>
+        <dt class="text-stone-500 dark:text-stone-400">Status</dt>
+        <dd class="font-medium text-stone-900 dark:text-stone-50">{{ . | title }}</dd>
         {{ end }}
         {{ with .Params.genres }}
           {{ if gt (len .) 0 }}
-        <dt class="text-slate-500 dark:text-slate-400">Genre</dt>
+        <dt class="text-stone-500 dark:text-stone-400">Genre</dt>
         <dd>
           {{ partial "genre-badges.html" (dict "genres" .) }}
         </dd>
@@ -33,7 +33,7 @@
         {{ end }}
       </dl>
       {{ with .Content }}
-        <div class="prose prose-slate max-w-none text-slate-700 dark:text-slate-200">
+        <div class="max-w-prose font-serif text-base leading-relaxed text-stone-700 dark:text-stone-200">
           {{ . }}
         </div>
       {{ end }}
@@ -43,18 +43,21 @@
   {{ $chapters := sort .Pages "Params.chapter_number" "asc" }}
 
   {{ $novelSlug := .Params.slug | default .File.TranslationBaseName }}
-  <section id="continue-reading" class="mb-6 hidden" data-novel-slug="{{ $novelSlug }}">
-    <div class="reading-card flex items-center justify-between p-4">
+  <section id="continue-reading" class="mb-8 hidden" data-novel-slug="{{ $novelSlug }}">
+    <div class="reading-card flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <p class="text-xs uppercase tracking-[0.25em] text-sky-600 dark:text-sky-400">Lanjutkan membaca</p>
-        <p id="continue-title" class="mt-1 text-sm font-medium text-slate-900 dark:text-white"></p>
+        <p class="text-xs font-medium text-stone-500 dark:text-stone-400">Lanjutkan membaca</p>
+        <p id="continue-title" class="mt-1 text-sm font-medium text-stone-900 dark:text-stone-50"></p>
       </div>
-      <a id="continue-link" class="control-btn control-btn-active self-start" href="#">Baca</a>
+      <a id="continue-link" class="control-btn control-btn-active self-start sm:self-auto" href="#">Lanjut</a>
     </div>
   </section>
 
   <section class="reading-card p-6 sm:p-8">
-    <h2 class="mb-4 text-xl font-semibold tracking-tight text-slate-900 dark:text-white">Daftar Bab ({{ len $chapters }})</h2>
+    <div class="mb-5 flex items-baseline justify-between gap-3">
+      <h2 class="text-xl font-semibold tracking-tight text-stone-900 dark:text-stone-50">Daftar Bab</h2>
+      <p class="text-xs font-medium text-stone-500 dark:text-stone-400">{{ len $chapters }} bab</p>
+    </div>
     <div class="grid gap-3">
       {{ range $chapters }}
         {{ partial "chapter-list-item.html" . }}

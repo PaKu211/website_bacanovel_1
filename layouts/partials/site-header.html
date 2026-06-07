@@ -6,15 +6,17 @@
 {{ $backURL := default "/" .BackURL }}
 {{ $backLabel := default "Beranda" .BackLabel }}
 
-<header class="mb-10 flex flex-col gap-6 rounded-3xl border border-slate-200 bg-white/80 p-6 shadow-soft backdrop-blur dark:border-slate-800 dark:bg-slate-900/80 sm:flex-row sm:items-center sm:justify-between">
-  <div>
+<header class="mb-10 flex flex-col gap-6 rounded-2xl border border-stone-200/80 bg-stone-50 p-6 shadow-[0_1px_0_rgba(28,25,23,0.04),0_8px_24px_-12px_rgba(28,25,23,0.08)] dark:border-stone-800/80 dark:bg-stone-900 sm:flex-row sm:items-center sm:justify-between">
+  <div class="min-w-0">
     {{ if $showBack }}
-      <a href="{{ $backURL | relURL }}" class="inline-flex w-fit items-center rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-soft hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800">&larr; {{ $backLabel }}</a>
+      <a href="{{ $backURL | relURL }}" class="inline-flex w-fit items-center gap-1.5 text-sm font-medium text-stone-600 transition hover:text-stone-900 dark:text-stone-300 dark:hover:text-stone-50"><span aria-hidden="true">&larr;</span> {{ $backLabel }}</a>
     {{ end }}
-    <p class="{{ if $showBack }}mt-4{{ else }}text-sm{{ end }} font-medium uppercase tracking-[0.3em] text-sky-600 dark:text-sky-400">{{ $eyebrow }}</p>
-    <h1 class="mt-2 text-3xl font-semibold tracking-tight text-slate-900 dark:text-white">{{ $title }}</h1>
+    {{ if $eyebrow }}
+      <p class="mt-3 text-xs font-medium text-stone-500 dark:text-stone-400">{{ $eyebrow }}</p>
+    {{ end }}
+    <h1 class="mt-1 text-3xl font-semibold tracking-tight text-stone-900 dark:text-stone-50 sm:text-4xl">{{ $title }}</h1>
     {{ with $description }}
-      <p class="mt-3 max-w-2xl text-slate-600 dark:text-slate-300">{{ . }}</p>
+      <p class="mt-3 max-w-2xl text-base leading-relaxed text-stone-600 dark:text-stone-300">{{ . }}</p>
     {{ end }}
   </div>
 

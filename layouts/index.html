@@ -9,7 +9,7 @@
     "ShowBack" false
   ) }}
 
-  <section class="mb-6">
+  <section class="mb-10">
     {{ partial "search.html" . }}
   </section>
 
@@ -19,29 +19,29 @@
     {{ if gt (len $novelPages) 0 }}
       <section class="grid gap-4">
         {{ range $novelPages }}
-          <article class="novel-card flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:gap-6">
-            {{ partial "cover-image.html" (dict "cover" .Params.cover "title" .Title "class" "w-full flex-shrink-0 sm:w-24") }}
+          <article class="novel-card flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:gap-6 sm:p-5">
+            {{ partial "cover-image.html" (dict "cover" .Params.cover "title" .Title "class" "w-full flex-shrink-0 sm:w-28") }}
             <div class="flex flex-1 flex-col gap-2">
-              <div class="flex flex-wrap items-center gap-2">
-                <h2 class="text-xl font-semibold tracking-tight text-slate-900 dark:text-white">{{ .Title }}</h2>
+              <div class="flex flex-wrap items-baseline gap-2">
+                <h2 class="text-xl font-semibold tracking-tight text-stone-900 dark:text-stone-50">{{ .Title }}</h2>
                 {{ with .Params.status }}
-                  <span class="rounded-full bg-sky-100 px-2.5 py-0.5 text-xs font-medium text-sky-700 dark:bg-sky-900/40 dark:text-sky-300">{{ . | title }}</span>
+                  <span class="rounded-full border border-stone-200 bg-stone-50 px-2.5 py-0.5 text-[11px] font-medium text-stone-600 dark:border-stone-700 dark:bg-stone-800/60 dark:text-stone-300">{{ . | title }}</span>
                 {{ end }}
               </div>
               {{ with .Params.author }}
-                <p class="text-sm text-slate-500 dark:text-slate-400">{{ . }}</p>
+                <p class="text-sm text-stone-500 dark:text-stone-400">{{ . }}</p>
               {{ end }}
               {{ with .Params.summary }}
-                <p class="line-clamp-2 text-sm text-slate-600 dark:text-slate-300">{{ . }}</p>
+                <p class="line-clamp-2 text-sm leading-relaxed text-stone-600 dark:text-stone-300">{{ . }}</p>
               {{ end }}
               <div class="mt-1">
                 {{ partial "genre-badges.html" (dict "genres" .Params.genres) }}
               </div>
               {{ $chapters := .RegularPages | len }}
               {{ if gt $chapters 0 }}
-                <p class="mt-1 text-xs text-slate-400 dark:text-slate-500">{{ $chapters }} bab</p>
+                <p class="mt-1 text-xs text-stone-400 dark:text-stone-500">{{ $chapters }} bab</p>
               {{ end }}
-              <div class="mt-2">
+              <div class="mt-3">
                 <a class="control-btn control-btn-active self-start" href="{{ .RelPermalink }}">Baca Novel</a>
               </div>
             </div>

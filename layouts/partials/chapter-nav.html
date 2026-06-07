@@ -29,22 +29,22 @@
   {{ end }}
 {{ end }}
 
-<nav class="mt-10 flex flex-col gap-3 border-t border-slate-200 pt-6 dark:border-slate-800 sm:flex-row sm:items-center sm:justify-between">
+<nav class="mt-12 flex flex-col gap-3 border-t border-stone-200 pt-8 dark:border-stone-800 sm:flex-row sm:items-center sm:justify-between">
   <div>
     {{ if $prevURL }}
-      <a class="control-btn" href="{{ $prevURL }}">&larr; Previous Chapter</a>
+      <a class="control-btn" href="{{ $prevURL }}"><span aria-hidden="true">&larr;</span> Bab sebelumnya</a>
     {{ else }}
-      <span class="control-btn cursor-not-allowed opacity-50">&larr; Previous Chapter</span>
+      <span class="control-btn cursor-not-allowed opacity-50"><span aria-hidden="true">&larr;</span> Bab sebelumnya</span>
     {{ end }}
   </div>
 
-  <a class="control-btn" href="#">Kembali ke Atas</a>
+  <a class="control-btn" href="#top">Kembali ke atas</a>
 
   <div class="sm:ml-auto">
     {{ if $nextURL }}
-      <a class="control-btn control-btn-active" href="{{ $nextURL }}">Next Chapter &rarr;</a>
+      <a class="control-btn control-btn-active" href="{{ $nextURL }}">Bab berikutnya <span aria-hidden="true">&rarr;</span></a>
     {{ else }}
-      <span class="control-btn control-btn-active cursor-not-allowed opacity-70">Next Chapter &rarr;</span>
+      <span class="control-btn control-btn-active cursor-not-allowed opacity-70">Bab berikutnya <span aria-hidden="true">&rarr;</span></span>
     {{ end }}
   </div>
 </nav>

@@ -1,22 +1,22 @@
 {{ define "title" }}{{ .Title }} | {{ .Site.Title }}{{ end }}
 
 {{ define "main" }}
-	{{ partial "site-header.html" (dict
-		"Context" .
-		"Eyebrow" "Daftar Bab"
-		"Title" .Title
-		"Description" (default "Urutan bab untuk novel ini disusun agar pembaca bisa lanjut otomatis ke chapter berikutnya." .Params.description)
-		"ShowBack" true
-		"BackURL" "/"
-		"BackLabel" "Beranda"
-	) }}
+  {{ partial "site-header.html" (dict
+    "Context" .
+    "Eyebrow" "Daftar Bab"
+    "Title" .Title
+    "Description" (default "Urutan bab untuk novel ini disusun agar pembaca bisa lanjut otomatis ke chapter berikutnya." .Params.description)
+    "ShowBack" true
+    "BackURL" "/"
+    "BackLabel" "Beranda"
+  ) }}
 
-	{{ $chapters := sort .Pages "Params.chapter_number" "asc" }}
-	<section class="grid gap-4">
-		{{ range $chapters }}
-			{{ partial "chapter-list-item.html" . }}
-		{{ else }}
-			{{ partial "empty-state.html" (dict "message" "Belum ada bab yang dipublikasikan." "class" "md:col-span-full") }}
-		{{ end }}
-	</section>
+  {{ $chapters := sort .Pages "Params.chapter_number" "asc" }}
+  <section class="grid gap-3">
+    {{ range $chapters }}
+      {{ partial "chapter-list-item.html" . }}
+    {{ else }}
+      {{ partial "empty-state.html" (dict "message" "Belum ada bab yang dipublikasikan.") }}
+    {{ end }}
+  </section>
 {{ end }}
