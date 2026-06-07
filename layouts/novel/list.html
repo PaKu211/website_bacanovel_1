@@ -82,7 +82,10 @@
             section.classList.remove('hidden');
           }
         }
-      } catch (e) {}
+      } catch (e) {
+        console.warn('Failed to parse reading progress:', e.message);
+        localStorage.removeItem(key);
+      }
     })();
   </script>
 {{ end }}
