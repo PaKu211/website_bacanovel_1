@@ -1,75 +1,71 @@
+{{ define "title" }}{{ .Site.Title }} - Baca Novel Online{{ end }}
+
 {{ define "main" }}
-<div class="container mx-auto max-w-2xl px-4 py-8">
-  
-  <!-- VIEW 1: KATALOG UTAMA -->
-  <div id="homepage-view" class="space-y-6">
-    <header class="mb-8 pb-4 border-b border-dashed border-neutral-800">
-      <h1 class="text-3xl font-extrabold text-white tracking-tight">Katalog Novel</h1>
-      <p class="text-sm text-neutral-400 mt-1">Selamat membaca proyek hobi buatan sendiri.</p>
-    </header>
-    <div id="novel-list" class="space-y-4"><!-- Diisi otomatis oleh JS --></div>
-  </div>
+  {{ partial "site-header.html" (dict
+    "Context" .
+    "Eyebrow" "Bacanovel"
+    "Title" "Katalog Novel"
+    "Description" "Baca novel online gratis. Koleksi novel terbaru, bab baru setiap hari."
+    "ShowBack" false
+  ) }}
 
-  <!-- VIEW 2: HALAMAN BACA PREMIUM (SPA) -->
-  <div id="reading-view" class="hidden space-y-6">
-    
-    <!-- BAR NAVIGASI ATAS & KONTROL FONT -->
-    <div class="flex flex-wrap justify-between items-center gap-4 pb-4 border-b border-dashed border-neutral-800">
-      <button onclick="window.location.hash=router.currentNovelHash" class="inline-flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 font-medium cursor-pointer">
-        ← Daftar Bab
-      </button>
-      
-      <!-- Kontrol Ukuran Teks Instan -->
-      <div class="flex items-center gap-2 bg-neutral-900 px-3 py-1.5 rounded-lg border border-neutral-800">
-        <button onclick="router.changeFontSize(-1)" class="text-xs text-neutral-400 hover:text-white px-2 cursor-pointer font-bold">A-</button>
-        <span id="font-size-indicator" class="text-xs text-neutral-500 font-mono">100%</span>
-        <button onclick="router.changeFontSize(1)" class="text-xs text-neutral-400 hover:text-white px-2 cursor-pointer font-bold">A+</button>
+  <section class="mb-6">
+    {{ partial "search.html" . }}
+  </section>
+
+  {{ $novels := .Site.GetPage "novels" }}
+  {{ if $novels }}
+    {{ $novelPages := $novels.Pages }}
+    {{ if gt (len $novelPages) 0 }}
+      <section class="grid gap-4">
+        {{ range $novelPages }}
+          <article class="novel-card flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:gap-6">
+            <div class="w-full flex-shrink-0 overflow-hidden rounded-2xl bg-slate-200 dark:bg-slate-800 sm:w-24">
+              {{ with .Params.cover }}
+                <img src="{{ . | relURL }}" alt="Sampul {{ $.Title }}" class="aspect-[3/4] w-full object-cover" loading="lazy" decoding="async">
+              {{ else }}
+                <div class="aspect-[3/4] w-full bg-slate-200 dark:bg-slate-800"></div>
+              {{ end }}
+            </div>
+            <div class="flex flex-1 flex-col gap-2">
+              <div class="flex flex-wrap items-center gap-2">
+                <h2 class="text-xl font-semibold tracking-tight text-slate-900 dark:text-white">{{ .Title }}</h2>
+                {{ with .Params.status }}
+                  <span class="rounded-full bg-sky-100 px-2.5 py-0.5 text-xs font-medium text-sky-700 dark:bg-sky-900/40 dark:text-sky-300">{{ . | title }}</span>
+                {{ end }}
+              </div>
+              {{ with .Params.author }}
+                <p class="text-sm text-slate-500 dark:text-slate-400">{{ . }}</p>
+              {{ end }}
+              {{ with .Params.summary }}
+                <p class="line-clamp-2 text-sm text-slate-600 dark:text-slate-300">{{ . }}</p>
+              {{ end }}
+              <div class="mt-1 flex flex-wrap gap-1.5">
+                {{ with .Params.genres }}
+                  {{ range . }}
+                    <span class="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">{{ . }}</span>
+                  {{ end }}
+                {{ end }}
+              </div>
+              {{ $chapters := .RegularPages | len }}
+              {{ if gt $chapters 0 }}
+                <p class="mt-1 text-xs text-slate-400 dark:text-slate-500">{{ $chapters }} bab</p>
+              {{ end }}
+              <div class="mt-2">
+                <a class="control-btn control-btn-active self-start" href="{{ .RelPermalink }}">Baca Novel</a>
+              </div>
+            </div>
+          </article>
+        {{ end }}
+      </section>
+    {{ else }}
+      <div class="rounded-3xl border border-dashed border-slate-300 bg-white p-10 text-center text-slate-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400">
+        Belum ada novel yang dipublikasikan.
       </div>
+    {{ end }}
+  {{ else }}
+    <div class="rounded-3xl border border-dashed border-slate-300 bg-white p-10 text-center text-slate-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400">
+      Belum ada novel yang dipublikasikan.
     </div>
-    
-    <!-- SLOT IKLAN ATAS -->
-    <div id="spa-ad-top" class="py-2 border-b border-neutral-900">
-      {{ partial "ad-slot.html" (dict "slot" "top") }}
-    </div>
-
-    <!-- HEADER JUDUL BAB -->
-    <header>
-      <h1 id="chapter-title" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight"></h1>
-      <div class="mt-2 text-xs text-neutral-500 font-mono">
-        <span id="novel-parent-name"></span>
-      </div>
-    </header>
-
-    <!-- ISI TEKS CERITA NOVEL -->
-    <div id="chapter-content" class="text-neutral-300 text-lg sm:text-xl font-normal leading-relaxed tracking-wide space-y-6 [overflow-wrap:break-word] select-none">
-      <!-- Diisi otomatis oleh JS -->
-    </div>
-
-    <!-- SLOT IKLAN BAWAH -->
-    <div id="spa-ad-bottom" class="py-4 border-t border-neutral-900">
-      {{ partial "ad-slot.html" (dict "slot" "bottom") }}
-    </div>
-
-    <!-- TOMBOL NAVIGASI BAB (PREV / NEXT DINAMIS) -->
-    <div class="flex justify-between items-center gap-4 pt-6 border-t border-dashed border-neutral-800">
-      <a id="prev-chap-btn" class="px-4 py-2 text-sm font-medium bg-neutral-900 text-neutral-400 rounded-lg border border-neutral-800 hover:text-white transition-colors cursor-pointer hidden">
-        ← Bab Sebelumnya
-      </a>
-      <div class="text-xs text-neutral-500 font-mono">Pindah Bab</div>
-      <a id="next-chap-btn" class="px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors cursor-pointer hidden">
-        Bab Selanjutnya →
-      </a>
-    </div>
-
-    <!-- KOTAK KOMENTAR CUSDIS DINAMIS -->
-    <div class="pt-8">
-      <h3 class="text-lg font-bold text-white mb-4">Komentar Pembaca</h3>
-      <div id="cusdis_thread" data-host="https://cusdis.com" data-app-id="9e4028b0-75fb-451b-bc96-265e4dded5fa" data-page-id="" data-page-url="" data-page-title=""></div>
-    </div>
-
-  </div>
-
-</div>
-
-<script src="/js/app.js" defer></script>
+  {{ end }}
 {{ end }}

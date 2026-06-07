@@ -1,9 +1,38 @@
+{{/*
+  Partial: chapter-nav.html
+  Renders Previous / Next links for a chapter page.
+  Order is determined by `chapter_number` (explicit), so the navigation is
+  deterministic regardless of front matter `date`. Manual `previous_chapter` /
+  `next_chapter` overrides win when present.
+*/}}
+
+{{ $current := .Params.chapter_number }}
+
+{{ $prevURL := .Params.previous_chapter | default "" }}
+{{ $nextURL := .Params.next_chapter | default "" }}
+
+{{ if and (eq $prevURL "") (eq $nextURL "") }}
+  {{ $siblings := sort (where .CurrentSection.RegularPages "Params.chapter_number" "ne" nil) "Params.chapter_number" "asc" }}
+  {{ $idx := -1 }}
+  {{ range $i, $p := $siblings }}
+    {{ if eq $p.Params.chapter_number $current }}{{ $idx = $i }}{{ end }}
+  {{ end }}
+  {{ if gt $idx -1 }}
+    {{ if gt $idx 0 }}
+      {{ $prevPage := index $siblings (sub $idx 1) }}
+      {{ $prevURL = $prevPage.RelPermalink }}
+    {{ end }}
+    {{ if lt $idx (sub (len $siblings) 1) }}
+      {{ $nextPage := index $siblings (add $idx 1) }}
+      {{ $nextURL = $nextPage.RelPermalink }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
 <nav class="mt-10 flex flex-col gap-3 border-t border-slate-200 pt-6 dark:border-slate-800 sm:flex-row sm:items-center sm:justify-between">
   <div>
-    {{ if .Params.previous_chapter }}
-      <a class="control-btn" href="{{ .Params.previous_chapter }}">&larr; Previous Chapter</a>
-    {{ else if .PrevInSection }}
-      <a class="control-btn" href="{{ .PrevInSection.RelPermalink }}">&larr; Previous Chapter</a>
+    {{ if $prevURL }}
+      <a class="control-btn" href="{{ $prevURL }}">&larr; Previous Chapter</a>
     {{ else }}
       <span class="control-btn cursor-not-allowed opacity-50">&larr; Previous Chapter</span>
     {{ end }}
@@ -12,10 +41,8 @@
   <a class="control-btn" href="#">Kembali ke Atas</a>
 
   <div class="sm:ml-auto">
-    {{ if .Params.next_chapter }}
-      <a class="control-btn control-btn-active" href="{{ .Params.next_chapter }}">Next Chapter &rarr;</a>
-    {{ else if .NextInSection }}
-      <a class="control-btn control-btn-active" href="{{ .NextInSection.RelPermalink }}">Next Chapter &rarr;</a>
+    {{ if $nextURL }}
+      <a class="control-btn control-btn-active" href="{{ $nextURL }}">Next Chapter &rarr;</a>
     {{ else }}
       <span class="control-btn control-btn-active cursor-not-allowed opacity-70">Next Chapter &rarr;</span>
     {{ end }}

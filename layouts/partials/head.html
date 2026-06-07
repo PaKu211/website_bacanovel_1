@@ -1,5 +1,69 @@
-{{ $style := resources.Get "css/main.css" | css.TailwindCSS | minify | fingerprint }}
-<link rel="stylesheet" href="{{ $style.RelPermalink }}" integrity="{{ $style.Data.Integrity }}">
+{{/*
+  Partial: head.html
+  Renders per-page SEO meta: title, description, canonical, robots, Open Graph, Twitter card.
+  Each page passes its own block-defined title; everything else is derived from page context.
+*/}}
+{{ $siteTitle := .Site.Title }}
+{{ $isHome := .IsHome }}
+{{ $pageTitle := "" }}
+{{ if $isHome }}
+  {{ $pageTitle = $siteTitle }}
+{{ else }}
+  {{ $pageTitle = printf "%s | %s" .Title $siteTitle }}
+{{ end }}
+
+{{ $description := "" }}
+{{ with .Description }}{{ $description = . }}{{ end }}
+{{ if eq $description "" }}
+  {{ with .Params.summary }}{{ $description = . }}{{ end }}
+{{ end }}
+{{ if and (eq $description "") .IsHome }}
+  {{ with .Site.Params.description }}{{ $description = . }}{{ end }}
+{{ end }}
+{{ if eq $description "" }}
+  {{ $raw := .Content }}
+  {{ $plain := $raw | plainify }}
+  {{ $plain = replace $plain "\n" " " }}
+  {{ $plain = replace $plain "\r" "" }}
+  {{ $plain = $plain | strings.TrimSpace }}
+  {{ $description = $plain | truncate 160 }}
+{{ end }}
+{{ $description = strings.TrimSpace $description }}
+
+{{ $canonical := .Permalink }}
+{{ $ogType := "website" }}
+{{ if .IsPage }}{{ $ogType = "article" }}{{ end }}
+
+{{ $ogImage := "" }}
+{{ with .Params.cover }}{{ $ogImage = . | absURL }}
+{{ else }}
+  {{ with .Params.image }}{{ $ogImage = . | absURL }}
+  {{ end }}
+{{ end }}
+
+<meta name="description" content="{{ $description }}">
+<link rel="canonical" href="{{ $canonical }}">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0f172a">
+
+<meta property="og:site_name" content="{{ $siteTitle }}">
+<meta property="og:title" content="{{ $pageTitle }}">
+<meta property="og:description" content="{{ $description }}">
+<meta property="og:url" content="{{ $canonical }}">
+<meta property="og:type" content="{{ $ogType }}">
+<meta property="og:locale" content="id_ID">
+{{ with $ogImage }}
+<meta property="og:image" content="{{ . }}">
+{{ end }}
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ $pageTitle }}">
+<meta name="twitter:description" content="{{ $description }}">
+{{ with $ogImage }}
+<meta name="twitter:image" content="{{ . }}">
+{{ end }}
+
+<link rel="stylesheet" href="/css/main.css">
 <script>
   if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
     document.documentElement.classList.add('dark');

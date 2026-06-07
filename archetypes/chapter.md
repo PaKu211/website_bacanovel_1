@@ -1,11 +1,12 @@
 ---
 title: "{{ replace .Name "-" " " | title }}"
-novel_title: "Judul Novel Utama"
+slug: "{{ .Name }}"
+novel_slug: "{{ .Section }}"
+novel_title: "{{ .Parent.Title }}"
 chapter_number: 1
+weight: 1
 date: {{ .Date }}
 draft: true
-next_chapter: ""
-previous_chapter: ""
 ---
 
 Tulis isi bab novel di sini...

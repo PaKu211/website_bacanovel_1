@@ -3,10 +3,19 @@ languageCode = "id-id"
 title = "Novel Reading"
 buildFuture = true
 
+[params]
+  description = "Baca novel online gratis. Koleksi novel terbaru, bab baru setiap hari."
+
+  [params.giscus]
+    repo = "owner/bacanovel-site"
+    repoId = "REPLACE_ME"
+    category = "Announcements"
+    categoryId = "REPLACE_ME"
+
 [outputs]
   home = ["HTML", "JSON"]
-  page = []
-  section = []
+  page = ["HTML"]
+  section = ["HTML"]
 [markup]
   [markup.goldmark]
     [markup.goldmark.renderer]

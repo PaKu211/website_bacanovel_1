@@ -26,7 +26,14 @@
 
     <section class="mt-10 rounded-3xl border border-slate-200 bg-slate-50 p-6 dark:border-slate-800 dark:bg-slate-950">
       <h2 class="text-xl font-semibold tracking-tight text-slate-900 dark:text-white">Komentar Pembaca</h2>
-      {{ partial "cusdis.html" (dict "pageID" .RelPermalink "pageURL" .Permalink "pageTitle" .Title "appID" "your-cusdis-app-id" "host" "https://cusdis.com") }}
+      {{ partial "giscus.html" (dict
+        "repo" .Site.Params.giscus.repo
+        "repoId" .Site.Params.giscus.repoId
+        "category" .Site.Params.giscus.category
+        "categoryId" .Site.Params.giscus.categoryId
+        "mapping" "pathname"
+        "lang" "id"
+      ) }}
     </section>
   </section>
 {{ end }}
@@ -68,5 +75,37 @@
         applyFontScale(fontSteps[nextIndex] || 140);
       });
     }
+
+    /* Reading progress */
+    (function () {
+      var path = window.location.pathname;
+      var progressKey = 'reading-progress:' + path;
+      var novelKey = 'last-read:' + '{{ .Params.novel_slug | default "" }}';
+
+      function saveProgress() {
+        localStorage.setItem(progressKey, String(window.scrollY));
+        localStorage.setItem(novelKey, JSON.stringify({
+          url: path,
+          title: document.title.split(' - ')[0] || '',
+          ts: Date.now()
+        }));
+      }
+
+      var scrollTimer = null;
+      window.addEventListener('scroll', function () {
+        clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(saveProgress, 500);
+      }, { passive: true });
+
+      window.addEventListener('beforeunload', saveProgress);
+
+      var saved = localStorage.getItem(progressKey);
+      if (saved) {
+        var y = parseInt(saved, 10);
+        if (y > 0) {
+          setTimeout(function () { window.scrollTo(0, y); }, 0);
+        }
+      }
+    })();
   </script>
 {{ end }}

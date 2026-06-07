@@ -1,0 +1,41 @@
+{{/*
+  Partial: giscus.html
+  Renders Giscus comments widget.
+  Usage: partial "giscus.html" (dict "repo" "owner/repo" "repoId" "R_xxx" "category" "Announcements" "categoryId" "DIC_xxx")
+  Defaults are provided so the widget degrades gracefully when called with minimal params.
+*/}}
+{{ $repo := .repo | default "owner/bacanovel-site" }}
+{{ $repoId := .repoId | default "REPLACE_ME" }}
+{{ $category := .category | default "Announcements" }}
+{{ $categoryId := .categoryId | default "REPLACE_ME" }}
+{{ $mapping := .mapping | default "pathname" }}
+{{ $strict := .strict | default "0" }}
+{{ $reactions := .reactionsEnabled | default "1" }}
+{{ $emitMetadata := .emitMetadata | default "0" }}
+{{ $inputPosition := .inputPosition | default "bottom" }}
+{{ $theme := .theme | default "light" }}
+{{ $lang := .lang | default "id" }}
+
+<div class="giscus mt-10"></div>
+
+<script>
+  (function () {
+    if (window.giscus) return;
+    var s = document.createElement('script');
+    s.src = 'https://giscus.app/client.js';
+    s.setAttribute('data-repo', '{{ $repo }}');
+    s.setAttribute('data-repo-id', '{{ $repoId }}');
+    s.setAttribute('data-category', '{{ $category }}');
+    s.setAttribute('data-category-id', '{{ $categoryId }}');
+    s.setAttribute('data-mapping', '{{ $mapping }}');
+    s.setAttribute('data-strict', '{{ $strict }}');
+    s.setAttribute('data-reactions-enabled', '{{ $reactions }}');
+    s.setAttribute('data-emit-metadata', '{{ $emitMetadata }}');
+    s.setAttribute('data-input-position', '{{ $inputPosition }}');
+    s.setAttribute('data-theme', '{{ $theme }}');
+    s.setAttribute('data-lang', '{{ $lang }}');
+    s.crossOrigin = 'anonymous';
+    s.async = true;
+    document.querySelector('.giscus').appendChild(s);
+  })();
+</script>
