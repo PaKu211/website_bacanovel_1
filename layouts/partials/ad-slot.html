@@ -1,20 +1,10 @@
 {{ $slot := .slot | default "generic" }}
 {{ $raw := .html | default "" }}
-<div class="ad-slot" data-slot="{{ $slot }}">
-  {{ if ne $raw "" }}
+{{ if ne $raw "" }}
+  <div class="ad-slot" data-slot="{{ $slot }}">
     {{ $raw | safeHTML }}
-  {{ else }}
-    <div>
-      <p class="text-[11px] font-medium text-stone-400 dark:text-stone-500">Sponsor</p>
-      {{ if eq $slot "top" }}
-        <p class="mt-1.5 text-stone-500 dark:text-stone-400">Banner iklan, posisi atas.</p>
-      {{ else if eq $slot "middle" }}
-        <p class="mt-1.5 text-stone-500 dark:text-stone-400">Banner iklan, posisi tengah.</p>
-      {{ else if eq $slot "bottom" }}
-        <p class="mt-1.5 text-stone-500 dark:text-stone-400">Banner iklan, posisi bawah.</p>
-      {{ else }}
-        <p class="mt-1.5 text-stone-500 dark:text-stone-400">Area banner iklan.</p>
-      {{ end }}
-    </div>
-  {{ end }}
-</div>
+  </div>
+{{ else }}
+  <!-- Ad slot placeholder: {{ $slot }} (hidden to preserve vertical rhythm) -->
+  <div class="ad-slot hidden" data-slot="{{ $slot }}" aria-hidden="true"></div>
+{{ end }}

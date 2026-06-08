@@ -15,11 +15,27 @@
   <section class="reading-card p-6 sm:p-8">
     <div class="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-stone-200 pb-5 dark:border-stone-800">
       <p class="text-xs font-medium text-stone-500 dark:text-stone-400">Chapter {{ .Params.chapter_number }}</p>
+
+    <div class="mt-3 flex flex-wrap items-center gap-2 text-sm text-stone-500 dark:text-stone-400">
+      <span>{{ .ReadingTime }} min read</span>
+      <span aria-hidden="true">&middot;</span>
+      <span class="waline-pageview-count" data-path="{{ .RelPermalink }}">0</span>
+      <span>views</span>
+      <span aria-hidden="true">&middot;</span>
+      <span class="waline-comment-count" data-path="{{ .RelPermalink }}">0</span>
+      <span>comments</span>
+    </div>
       <div class="flex items-center gap-2 text-xs text-stone-500 dark:text-stone-400">
         <span>Ukuran teks</span>
         <button type="button" id="font-decrease" class="control-btn h-8 px-3 text-xs" aria-label="Perkecil teks">A-</button>
         <span id="font-display" class="min-w-[3.5rem] text-center text-xs font-medium text-stone-700 dark:text-stone-200">100%</span>
         <button type="button" id="font-increase" class="control-btn h-8 px-3 text-xs" aria-label="Perbesar teks">A+</button>
+        <span class="mx-1 hidden h-4 w-px bg-stone-300 sm:inline-block dark:bg-stone-700" aria-hidden="true"></span>
+        <div class="flex items-center gap-1" role="group" aria-label="Font family">
+          <button type="button" id="font-family-sans" class="control-btn h-8 px-2.5 text-xs">Sans</button>
+          <button type="button" id="font-family-serif" class="control-btn control-btn-active h-8 px-2.5 text-xs">Serif</button>
+          <button type="button" id="font-family-mono" class="control-btn h-8 px-2.5 text-xs">Mono</button>
+        </div>
       </div>
     </div>
 
@@ -38,30 +54,23 @@
     <section class="mt-12 rounded-2xl border border-stone-200/80 bg-stone-50 p-6 dark:border-stone-800/80 dark:bg-stone-900/60">
       <h2 class="text-xl font-semibold tracking-tight text-stone-900 dark:text-stone-50">Komentar Pembaca</h2>
       <p class="mt-1 text-sm text-stone-500 dark:text-stone-400">Diskusi pembaca tentang bab ini.</p>
-      {{ partial "giscus.html" (dict
-        "repo" .Site.Params.giscus.repo
-        "repoId" .Site.Params.giscus.repoId
-        "category" .Site.Params.giscus.category
-        "categoryId" .Site.Params.giscus.categoryId
-        "mapping" "pathname"
-        "lang" "id"
-      ) }}
+      {{ partial "waline.html" . }}
     </section>
   </section>
 {{ end }}
 
 {{ define "scripts" }}
   <script>
-    const readingArea = document.getElementById('reading-area');
-    const fontDisplay = document.getElementById('font-display');
-    const fontDecrease = document.getElementById('font-decrease');
-    const fontIncrease = document.getElementById('font-increase');
-    const fontSteps = [90, 100, 110, 120, 130, 140];
-    const fontKey = 'reading-font-scale';
-    let currentScale = Number(localStorage.getItem(fontKey)) || 100;
+    var readingArea = document.getElementById('reading-area');
+    var fontDisplay = document.getElementById('font-display');
+    var fontDecrease = document.getElementById('font-decrease');
+    var fontIncrease = document.getElementById('font-increase');
+    var fontSteps = [90, 100, 110, 120, 130, 140];
+    var fontKey = 'reading-font-scale';
+    var currentScale = Number(localStorage.getItem(fontKey)) || 100;
 
     function applyFontScale(scale) {
-      const clamped = Math.min(140, Math.max(90, scale));
+      var clamped = Math.min(140, Math.max(90, scale));
       currentScale = clamped;
       readingArea.style.fontSize = clamped + '%';
       if (fontDisplay) {
@@ -73,19 +82,50 @@
     applyFontScale(currentScale);
 
     if (fontDecrease) {
-      fontDecrease.addEventListener('click', () => {
-        const currentIndex = fontSteps.indexOf(currentScale);
-        const nextIndex = Math.max(0, currentIndex - 1);
-        applyFontScale(fontSteps[nextIndex] || 90);
+      fontDecrease.addEventListener('click', function () {
+        var i = fontSteps.indexOf(currentScale);
+        var next = Math.max(0, i - 1);
+        applyFontScale(fontSteps[next] || 90);
       });
     }
 
     if (fontIncrease) {
-      fontIncrease.addEventListener('click', () => {
-        const currentIndex = fontSteps.indexOf(currentScale);
-        const nextIndex = Math.min(fontSteps.length - 1, currentIndex + 1);
-        applyFontScale(fontSteps[nextIndex] || 140);
+      fontIncrease.addEventListener('click', function () {
+        var i = fontSteps.indexOf(currentScale);
+        var next = Math.min(fontSteps.length - 1, i + 1);
+        applyFontScale(fontSteps[next] || 140);
       });
+    }
+
+    var fontFamilyKey = 'reading-font-family';
+    var familySans = document.getElementById('font-family-sans');
+    var familySerif = document.getElementById('font-family-serif');
+    var familyMono = document.getElementById('font-family-mono');
+    var currentFamily = localStorage.getItem(fontFamilyKey) || 'font-serif';
+
+    function applyFontFamily(family) {
+      currentFamily = family;
+      readingArea.classList.remove('font-sans', 'font-serif', 'font-mono');
+      readingArea.classList.add(family);
+      [familySans, familySerif, familyMono].forEach(function (btn) {
+        btn.classList.remove('control-btn-active');
+      });
+      var activeId = 'font-family-' + family.replace('font-', '');
+      var activeBtn = document.getElementById(activeId);
+      if (activeBtn) activeBtn.classList.add('control-btn-active');
+      localStorage.setItem(fontFamilyKey, family);
+    }
+
+    applyFontFamily(currentFamily);
+
+    if (familySans) {
+      familySans.addEventListener('click', function () { applyFontFamily('font-sans'); });
+    }
+    if (familySerif) {
+      familySerif.addEventListener('click', function () { applyFontFamily('font-serif'); });
+    }
+    if (familyMono) {
+      familyMono.addEventListener('click', function () { applyFontFamily('font-mono'); });
     }
 
     (function () {
@@ -103,10 +143,20 @@
       }
 
       var scrollTimer = null;
-      window.addEventListener('scroll', function () {
-        clearTimeout(scrollTimer);
-        scrollTimer = setTimeout(saveProgress, 500);
-      }, { passive: true });
+      var rafScheduled = false;
+
+      function scheduleSave() {
+        if (!rafScheduled) {
+          rafScheduled = true;
+          requestAnimationFrame(function () {
+            rafScheduled = false;
+            clearTimeout(scrollTimer);
+            scrollTimer = setTimeout(saveProgress, 500);
+          });
+        }
+      }
+
+      window.addEventListener('scroll', scheduleSave, { passive: true });
 
       window.addEventListener('beforeunload', saveProgress);
 

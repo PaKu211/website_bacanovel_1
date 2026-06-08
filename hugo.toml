@@ -7,11 +7,12 @@ buildFuture = true
   description = "Baca novel online gratis. Koleksi novel terbaru, bab baru setiap hari."
   cfAnalyticsToken = ""
 
-  [params.giscus]
-    repo = "owner/bacanovel-site"
-    repoId = "REPLACE_ME"
-    category = "Announcements"
-    categoryId = "REPLACE_ME"
+  [params.announcement]
+    enable = true
+    text = "Selamat datang di Bacanovel! Nikmati pengalaman membaca premium."
+
+  [params.waline]
+    serverURL = "https://comment-piofqjw81-smiley211.vercel.app"
 
 [outputs]
   home = ["HTML"]

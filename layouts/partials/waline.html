@@ -1,0 +1,26 @@
+{{/*
+  Partial: waline.html
+  Renders Waline v3 comments widget with stone palette overrides.
+  Reads serverURL directly from site config.
+  Enables reactions and pageview/comment counters.
+*/}}
+{{ $serverURL := site.Params.waline.serverURL | default "YOUR_SERVER_URL_HERE" }}
+{{ $lang := "id" }}
+
+<div id="waline-comments" class="waline-wrapper mt-8"></div>
+
+<script type="module">
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
+
+  init({
+    el: '#waline-comments',
+    serverURL: '{{ $serverURL }}',
+    lang: '{{ $lang }}',
+    dark: 'html.dark',
+    login: 'enable',
+    pageSize: 20,
+    reaction: true,
+    emoji: ['https://unpkg.com/@waline/emojis@1.1.0/weibo'],
+    pageview: true,
+  });
+</script>

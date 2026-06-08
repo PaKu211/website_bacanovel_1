@@ -120,4 +120,128 @@
   .reading-content a {
     @apply text-stone-900 underline decoration-stone-400 underline-offset-4 transition hover:decoration-stone-700 dark:text-stone-100 dark:decoration-stone-500 dark:hover:decoration-stone-300;
   }
+
+}
+
+/* Waline overrides (unlayered to beat Waline's external stylesheet in cascade order) */
+/* stone palette, no pure black/white */
+.waline-wrapper {
+  --waline-theme-color: #44403c;
+  --waline-text-color: #44403c;
+  --waline-bgcolor: #fafaf9;
+  --waline-bgcolor-light: #f5f5f4;
+  --waline-bgcolor-hover: #e7e5e4;
+  --waline-border-color: #d6d3d1;
+  --waline-disable-bgcolor: #f5f5f4;
+  --waline-disable-color: #a8a29e;
+  --waline-bq-color: #d6d3d1;
+  --waline-avatar-radius: 50%;
+  --waline-mobile-width: 36px;
+  --waline-mobile-height: 36px;
+}
+
+html.dark .waline-wrapper {
+  --waline-theme-color: #d6d3d1;
+  --waline-text-color: #d6d3d1;
+  --waline-bgcolor: #1c1917;
+  --waline-bgcolor-light: #292524;
+  --waline-bgcolor-hover: #44403c;
+  --waline-border-color: #44403c;
+  --waline-disable-bgcolor: #292524;
+  --waline-disable-color: #57534e;
+  --waline-bq-color: #57534e;
+}
+
+.waline-wrapper .wl-count {
+  color: var(--waline-theme-color);
+}
+
+.waline-wrapper .wl-action:hover {
+  color: var(--waline-theme-color);
+}
+
+.waline-wrapper .wl-btn {
+  @apply rounded-full border border-stone-300 px-5 py-2 text-sm font-medium text-stone-700 transition hover:border-stone-400 dark:border-stone-700 dark:text-stone-200 dark:hover:border-stone-600;
+}
+
+.waline-wrapper .wl-btn.primary {
+  @apply border-stone-900 bg-stone-900 text-stone-50 hover:bg-stone-800 dark:border-stone-100 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-stone-200;
+}
+
+.waline-wrapper .wl-panel {
+  @apply rounded-xl border border-stone-200/80 bg-stone-50 dark:border-stone-800/80 dark:bg-stone-900;
+}
+
+.waline-wrapper .wl-card {
+  @apply border-b border-stone-200/80 pb-4 dark:border-stone-800/80;
+}
+
+.waline-wrapper .wl-meta-head {
+  @apply text-xs text-stone-500 dark:text-stone-400;
+}
+
+.waline-wrapper .wl-user-name {
+  @apply text-sm font-medium text-stone-900 dark:text-stone-100;
+}
+
+.waline-wrapper .wl-comment-actions button {
+  @apply text-xs text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100;
+}
+
+.waline-wrapper input,
+.waline-wrapper textarea {
+  @apply rounded-xl border border-stone-200/80 bg-stone-50 px-4 py-2 text-sm text-stone-900 placeholder:text-stone-400 focus:border-stone-400 focus:outline-none dark:border-stone-800/80 dark:bg-stone-900 dark:text-stone-100 dark:placeholder:text-stone-500 dark:focus:border-stone-600;
+}
+
+/* Waline reaction overrides — stone palette, no rainbow/saturated colors */
+.waline-wrapper .wl-reaction {
+  --wl-reaction-bg: #f5f5f4;
+  --wl-reaction-bg-hover: #e7e5e4;
+  --wl-reaction-border: #d6d3d1;
+  --wl-reaction-text: #44403c;
+  --wl-reaction-active-bg: #44403c;
+  --wl-reaction-active-text: #fafaf9;
+  --wl-reaction-count: #78716c;
+}
+
+html.dark .waline-wrapper .wl-reaction {
+  --wl-reaction-bg: #292524;
+  --wl-reaction-bg-hover: #44403c;
+  --wl-reaction-border: #44403c;
+  --wl-reaction-text: #d6d3d1;
+  --wl-reaction-active-bg: #d6d3d1;
+  --wl-reaction-active-text: #1c1917;
+  --wl-reaction-count: #a8a29e;
+}
+
+.waline-wrapper .wl-reaction button {
+  @apply rounded-full border px-3 py-1.5 text-xs font-medium transition;
+  background-color: var(--wl-reaction-bg);
+  border-color: var(--wl-reaction-border);
+  color: var(--wl-reaction-text);
+}
+
+.waline-wrapper .wl-reaction button:hover {
+  background-color: var(--wl-reaction-bg-hover);
+  border-color: var(--wl-reaction-border);
+}
+
+.waline-wrapper .wl-reaction button.active {
+  background-color: var(--wl-reaction-active-bg);
+  border-color: var(--wl-reaction-active-bg);
+  color: var(--wl-reaction-active-text);
+}
+
+.waline-wrapper .wl-reaction .wl-reaction-count {
+  color: var(--wl-reaction-count);
+}
+
+.waline-wrapper .wl-reaction .wl-emoji {
+  filter: grayscale(100%);
+  opacity: 0.8;
+}
+
+.waline-wrapper .wl-reaction button.active .wl-emoji {
+  filter: none;
+  opacity: 1;
 }
